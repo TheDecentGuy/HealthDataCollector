@@ -1,6 +1,53 @@
 <?php include "dbcon.php";
 include "link.php";
 $res = mysqli_query($con, "select * from collection");
+
+if (isset($_POST['update'])) {
+    $id = $_GET['id'];
+    $age =  mysqli_real_escape_string($con, $_POST['age']);
+    $gender =  mysqli_real_escape_string($con, $_POST['gender']);
+    $height =  mysqli_real_escape_string($con, $_POST['height']);
+    $weight =  mysqli_real_escape_string($con, $_POST['weight']);
+    $bmi =  mysqli_real_escape_string($con, $_POST['bmi']);
+    $bp =  mysqli_real_escape_string($con, $_POST['bp']);
+    $heartrate =  mysqli_real_escape_string($con, $_POST['heartrate']);
+    $oxygen =  mysqli_real_escape_string($con, $_POST['oxygen']);
+
+    $updatequery = "UPDATE collection SET age='$age',gender='$gender',height='$height',weight='$weight',bmi='$bmi',bp='$bp' ,heartrate='$heartrate',oxygen='$oxygen'where id='$id'";
+    $uquery = mysqli_query($con, $updatequery);
+    if ($uquery) {
+?>
+        <script>
+            location.replace("visualization.php");
+        </script>
+    <?php
+    } else {
+    ?>
+        <script>
+            alert("There is a problem while updating... ");
+        </script>
+    <?php
+    }
+}
+
+if (isset($_POST['delete'])) {
+
+
+    $id = $_GET['id'];
+
+    $deletequery = "DELETE FROM collection where prod_id='$id'";
+    $dquery = mysqli_query($con, $deletequery);
+
+    if ($dquery) {
+    ?>
+        <script>
+            location.replace("visualization.php");
+        </script>
+<?php
+    } else {
+        echo "There is problem when deleting...";
+    }
+}
 ?>
 <html lang="en" class="dark" style="--color-primary: 0 174 239; --color-secondary: 0 51 153; --plyr-color-main: #00AEEF;">
 
@@ -32,60 +79,63 @@ $res = mysqli_query($con, "select * from collection");
             <!-- component -->
             <div class=" bg-gray-100 py-6 flex flex-col justify-center mx-auto sm:py-12">
                 <div class="">
-                    <div class="h-auto shadow-2xl shadow-purple-500 lg:py-10 py-10 px-10 w-2/3 bg-indigo-500 flex flex-col space-y-5 mx-auto rounded-3xl shadow-xl hover:rotate-1 transition-transform">
-                        <div class="flex flex-cols space-x-2 mb-10">
-                            <h1 class=" font-medium text-white text-2xl tracking-wide"><?php echo  ucfirst($_GET['name']); ?></h1>
-                            <h1 class=" font-medium text-white text-2xl tracking-wide"><?php echo  ucfirst($_GET['lastname']); ?></h1>
+                    <form action="" method="post">
+                        <div class="h-auto shadow-2xl shadow-purple-500 lg:py-10 py-10 px-10 w-2/3 bg-indigo-500 flex flex-col space-y-5 mx-auto rounded-3xl shadow-xl hover:rotate-1 transition-transform">
+                            <div class="flex flex-cols space-x-2 mb-10">
+                                <h1 class=" font-medium text-white text-2xl tracking-wide"><?php echo  ucfirst($_GET['name']); ?></h1>
+                                <h1 class=" font-medium text-white text-2xl tracking-wide"><?php echo  ucfirst($_GET['lastname']); ?></h1>
+                            </div>
+                            <div class="grid sm:grid-cols-2 sm:flex-row m">
+                                <div class="grid grid-cols-2">
+
+                                    <h2 class="font-normal tracking-wide text-xl text-white lg:w-2/5">AGE :</h2>
+                                    <input name="age" class="h-7 w-20 p-2  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['age']); ?>">
+                                </div>
+
+                                <div class="grid grid-cols-2 mb-10">
+
+                                    <h2 class="font-normal tracking-wide text-xl text-white lg:w-2/5">GENDER:</h2>
+                                    <input name="gender" class="h-7 w-20 p-2  font-bold rounded" type="text" value="<?php echo $_GET['gender']; ?>">
+
+                                </div>
+                            </div>
+                            <div class="grid sm:grid-cols-3 grid-rows-3  sm:flex-row">
+                                <div class="grid grid-cols-2">
+                                    <backquotes class="font-normal text-white text-sm tracking-wider">HEIGHT :</backquotes>
+                                    <input name="height" class="h-7 w-20 p-2  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['height']); ?>">
+                                </div>
+                                <div class="grid grid-cols-2">
+                                    <backquotes class="font-normal text-white text-sm tracking-wider">WEIGHT :</backquotes>
+                                    <input name="weight" class="h-7 w-20 p-2   font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['weight']); ?>">
+                                </div>
+                                <div class="grid grid-cols-2">
+                                    <backquotes class="font-normal text-white text-sm tracking-wider">BMI :</backquotes>
+                                    <input name="bmi" class="h-7 w-20 p-2   font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['bmi']); ?>">
+                                </div>
+                            </div>
+                            <div class="grid sm:grid-cols-3 ">
+                                <div class="grid grid-cols-2">
+                                    <backquotes class="font-normal text-white text-sm tracking-wider">HEARTRATE :</backquotes>
+                                    <input name="heartrate" class="h-7 w-20 p-2   font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['heartrate']); ?>">
+                                </div>
+                                <div class="grid grid-cols-2">
+                                    <backquotes class="font-normal text-white text-sm tracking-wider">BLOOD P. :</backquotes>
+                                    <input name="bp" class="h-7 w-20 p-2   font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['bp']); ?>">
+                                </div>
+                                <div class="grid grid-cols-2">
+                                    <backquotes class="font-normal text-white text-sm tracking-wider">OXYGEN:</backquotes>
+                                    <input name="oxygen" class="h-7 w-20 p-2 font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['oxygen']); ?>">
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-2">
+                                <button id="update" name="update" class="text-white mx-2" href="">UPDATE</button>
+                                <button id="delete" class="mx-2 text-red-500 ">DELETE</button>
+                                <a id="cancel" class="mx-2" href="visualization.php">CANCEL</a>
+
+                            </div>
                         </div>
-                        <div class="grid sm:grid-cols-2 sm:flex-row m">
-                            <div class="grid grid-cols-2">
-
-                                <h2 class="font-normal tracking-wide text-xl text-white lg:w-2/5">AGE :</h2>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['age']); ?>" disabled>
-                            </div>
-
-                            <div class="grid grid-cols-2 mb-10">
-
-                                <h2 class="font-normal tracking-wide text-xl text-white lg:w-2/5">GENDER:</h2>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="text" value="<?php echo $_GET['gender']; ?>" disabled>
-
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-3 grid-rows-3  sm:flex-row">
-                            <div class="grid grid-cols-2">
-                                <backquotes class="font-normal text-white text-sm tracking-wider">HEIGHT :</backquotes>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['height']); ?>" disabled>
-                            </div>
-                            <div class="grid grid-cols-2">
-                                <backquotes class="font-normal text-white text-sm tracking-wider">WEIGHT :</backquotes>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['weight']); ?>" disabled>
-                            </div>
-                            <div class="grid grid-cols-2">
-                                <backquotes class="font-normal text-white text-sm tracking-wider">BMI :</backquotes>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['bmi']); ?>" disabled>
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-3 ">
-                            <div class="grid grid-cols-2">
-                                <backquotes class="font-normal text-white text-sm tracking-wider">HEARTRATE :</backquotes>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['heartrate']); ?>" disabled>
-                            </div>
-                            <div class="grid grid-cols-2">
-                                <backquotes class="font-normal text-white text-sm tracking-wider">BLOOD P. :</backquotes>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['bp']); ?>" disabled>
-                            </div>
-                            <div class="grid grid-cols-2">
-                                <backquotes class="font-normal text-white text-sm tracking-wider">OXYGEN:</backquotes>
-                                <input class="h-7 w-20 p-2 text-white  font-bold rounded" type="number" value="<?php echo  ucfirst($_GET['oxygen']); ?>" disabled>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end">
-                            <button id="edit" href="">EDIT</button>
-                            <button id="cancel" class="text-red-500" href="" hidden>CANCEL</button>
-
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -185,33 +235,6 @@ $res = mysqli_query($con, "select * from collection");
         $('div.toolbar').html('<h1 class=""></h1>');
         $('#myTable_info').addClass('p-2');
         $('#myTable_wrapper').addClass('p-2');
-
-
-        $("#edit").click(function() {
-            $("input").prop('disabled', false);
-            $("select").prop('disabled', false);
-
-            $("input").removeClass("bg-indigo-500");
-            $("input").addClass("ring-2");
-
-
-            $("#edit").hide();
-            $("#cancel").show();
-
-        });
-
-        $("#cancel").click(function() {
-            $("input").prop('disabled', true);
-            $("select").prop('disabled', true);
-
-            $("input").addClass("bg-indigo-500");
-            $("input").removeClass("ring-2 ring-white");
-
-
-            $("#edit").show();
-            $("#cancel").hide();
-
-        });
     </script>
 </body>
 
