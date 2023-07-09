@@ -1,6 +1,37 @@
 <?php include "dbcon.php";
-include "link.php";
 $res = mysqli_query($con, "select * from collection");
+
+
+if (isset($_POST["download"])) {
+    $query = "SELECT * FROM collection";
+    $result = mysqli_query($con, $query) or die("database error:" . mysqli_error($con));
+    $records = array();
+    while ($rows = mysqli_fetch_assoc($res)) {
+        $records[] = $rows;
+    }
+
+    $filename = "data" . date('Ymd') . ".csv";
+    header("Content-Type: application/csv");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    readfile($filename);
+
+
+    $fh = fopen('php://output', 'w');
+    $is_coloumn = true;
+    if (!empty($records)) {
+        foreach ($records as $record) {
+            if ($is_coloumn) {
+                fputcsv($fh, array_keys($record));
+                $is_coloumn = false;
+            }
+            fputcsv($fh, array_values($record));
+        }
+        fclose($fh);
+    }
+    exit;
+}
+
 ?>
 <html lang="en" class="dark" style="--color-primary: 0 174 239; --color-secondary: 0 51 153; --plyr-color-main: #00AEEF;">
 
@@ -8,7 +39,13 @@ $res = mysqli_query($con, "select * from collection");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="msapplication-TileColor" content="#FE006F">
+    <script src="https://cdn.tailwindcss.com"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
 
 </head>
 
@@ -30,9 +67,14 @@ $res = mysqli_query($con, "select * from collection");
                 </div>
             </div><!---->
             <div class="section-spacing">
+
                 <section id="aif76d85" class="overflow-hidden lg:relative pt-12 sm:pt-5 md:pt-5 lg:pt-5" sectionname="hero" sectionlabel="Hero" sortorder="0">
                     <div class="max-w-md px-4 mx-auto sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl">
                         <div class="relative z-[1]"><!-- --><!-- tablespace -->
+                            <form action="" method="post">
+                                <button type="submit" name="download" class="px-6 py-2 mt-5 text-white rounded hover:bg-purple-400 bg-purple-500">Download .csv</button>
+                            </form>
+
                             <div class="relative overflow-x-auto sm:rounded-lg">
                                 <table id="myTable" class="w-full text-sm text-left text-gray-500">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -99,6 +141,7 @@ $res = mysqli_query($con, "select * from collection");
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
                     </div>
                 </section>
