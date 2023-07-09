@@ -17,7 +17,10 @@ if (isset($_POST['update'])) {
     $uquery = mysqli_query($con, $updatequery);
     if ($uquery) {
 ?>
+
         <script>
+            alert("Updated Successfully..... ");
+
             location.replace("visualization.php");
         </script>
     <?php
@@ -35,12 +38,14 @@ if (isset($_POST['delete'])) {
 
     $id = $_GET['id'];
 
-    $deletequery = "DELETE FROM collection where prod_id='$id'";
+    $deletequery = "DELETE FROM collection where id='$id'";
     $dquery = mysqli_query($con, $deletequery);
 
     if ($dquery) {
     ?>
         <script>
+            alert("Deleted successfully......");
+
             location.replace("visualization.php");
         </script>
 <?php
@@ -130,7 +135,7 @@ if (isset($_POST['delete'])) {
 
                             <div class="flex justify-end space-x-2">
                                 <button id="update" name="update" class="text-white mx-2" href="">UPDATE</button>
-                                <button id="delete" class="mx-2 text-red-500 ">DELETE</button>
+                                <button id="delete"name="delete" class="mx-2 text-red-500 ">DELETE</button>
                                 <a id="cancel" class="mx-2" href="visualization.php">CANCEL</a>
 
                             </div>
